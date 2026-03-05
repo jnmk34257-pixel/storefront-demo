@@ -1,0 +1,13 @@
+footer{
+    position: fixed;
+    bottom: 0;
+    width: 100%; /*Ensures the footer spans the full width of the viewpoint*/
+    height: 60px; 
+}
+
+body{
+    padding-bottom: 60px; /* must match the footer's height*/
+}
+
+
+/*1:04:36
