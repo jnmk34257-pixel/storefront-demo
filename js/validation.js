@@ -1,5 +1,20 @@
 const STORAGE_KEY = 'storefront_user';
 
+function getOrCreateErrorElement(formField) {
+    const fieldId = formField.id;
+    const existing = document.getElementById(fieldId + 'Error');
+
+    if (existing) {
+        return existing;
+    }
+
+    const errorElement = document.createElement('div');
+    errorElement.id = fieldId + 'Error';
+    errorElement.className = 'invalid-feedback show';
+    formField.insertAdjacentElement('afterend', errorElement);
+    return errorElement;
+}
+
 function updateField(formField, errorElement, isValid, errorMessage) {
     if (isValid) {
         formField.classList.add('is-valid');
@@ -21,7 +36,7 @@ function updateField(formField, errorElement, isValid, errorMessage) {
 function validateField(formField) {
     const fieldId = formField.id;
     const value = formField.value.trim();
-    const errorElement = document.getElementById(fieldId + 'Error');
+    const errorElement = getOrCreateErrorElement(formField);
 
     let isValid = true;
     let errorMessage = "";
@@ -37,9 +52,9 @@ function validateField(formField) {
         switch(fieldId) {
             case 'firstName':
             case 'lastName':
-                if (value.length < 2) {
+                if (!/^[A-Za-z\-\s']{2,50}$/.test(value)) {
                     isValid = false;
-                    errorMessage = 'Name must be atleast 2 characters';
+                    errorMessage = 'Name must be 2-50 letters and may include spaces, apostrophes, or hyphens';
                 }
                 break;
 
@@ -50,6 +65,14 @@ function validateField(formField) {
                     isValid = false;
                     errorMessage = 'Please enter a valid email';
                 }
+                break;
+
+            case 'phone':
+                if (!/^(\+1\s?)?(\(?\d{3}\)?[-.\s]?)\d{3}[-.\s]?\d{4}$/.test(value)) {
+                    isValid = false;
+                    errorMessage = 'Enter a valid US phone number (e.g., 123-456-7890)';
+                }
+                break;
         }
     }
 
@@ -87,12 +110,6 @@ function getFormData(form) {
         lastName: data.lastName,
         email: data.email,
         phone: data.phone,
-        address: {
-            street: data.street,
-            city: data.city,
-            state: data.state,
-            zip: data.zip
-        },
         creationDate: new Date().toISOString()
     };
 }
@@ -113,14 +130,16 @@ function savaFormDataToLocalStorage(formData) {
 
 function displayUserCard(userData) {
     const userCardContainer = document.getElementById('userCard');
-    console.log(userCardContainer)
+    if (!userCardContainer) {
+        return;
+    }
 
     let cardHtml = `
         <div class="card">
             <div>
                 <h5>${userData.firstName} ${userData.lastName}</h5>
                 <p class="card-text">Email: ${userData.email}</p>
-                <p class="card-text">Address: ${userData.address.street}, ${userData.address.city}, ${userData.address.state} ${userData.address.zip}</p>
+                <p class="card-text">Phone: ${userData.phone}</p>
                 <button class="btn btn-danger">Delete User</button>
             </div>
         </div>
@@ -132,7 +151,7 @@ function displayUserCard(userData) {
 function handleSignupSubmit(event) {
     event.preventDefault();
 
-    const form = document.getElementById("signupForm");
+    const form = event.currentTarget;
 
     if(!validateForm(form)) {
         // window.alert('Form is not valid');
@@ -152,9 +171,23 @@ function handleSignupSubmit(event) {
 }
 
 function initilizeApp() {
-    console.log('Setting Everything');
+    const signupForm = document.getElementById('signupForm') || document.querySelector('form.needs-validation');
 
-    document.getElementById('signupForm').addEventListener('submit', handleSignupSubmit);
+    if (!signupForm) {
+        return;
+    }
+
+    signupForm.addEventListener('submit', handleSignupSubmit);
+
+    const formInputs = signupForm.querySelectorAll('input, select');
+    formInputs.forEach(formField => {
+        formField.addEventListener('blur', () => validateField(formField));
+        formField.addEventListener('input', () => {
+            if (formField.classList.contains('is-invalid')) {
+                validateField(formField);
+            }
+        });
+    });
 }
 
 document.addEventListener('DOMContentLoaded', initilizeApp);
