@@ -42,7 +42,7 @@
         <div class="card p-4 md-4">
             <h2 class="text-center mb-4">Sign Up</h2>
 
-            <form class="row g-3 needs-validation" novalidate>
+            <form id="signupForm" class="row g-3 needs-validation" novalidate>
 
                 <div class="col-md-6">
                     <label for="firstName" class="form-label">First name</label>
@@ -58,37 +58,12 @@
 
                 <div class="col-md-6">
                     <label for="email" class="form-label">Email</label>
-                    <input type="email" class="form-control" id="email" name="email" placeholder="@john_doe@example.com" autocomplete="off"autocomplete="off"required>
+                    <input type="email" class="form-control" id="email" name="email" placeholder="john_doe@example.com" autocomplete="off" required>
                 </div>
 
                 <div class="col-md-6">
                     <label for="phone" class="form-label">Phone</label>
                     <input type="tel" class="form-control" id="phone" name="phone" placeholder="123-456-7890" autocomplete="off" required>
-                </div>
-
-                <div class="col-md-6">
-                    <label for="street" class="form-label">Street Address</label>
-                    <input type="street" class="form-control" id="street" name="street" autocomplete="off" required>
-                </div>
-
-                <div class="col-md-2">
-                    <label for="city" class="form-label">City</label>
-                    <input type="city" class="form-control" id="city" name="city" autocomplete="off" required>
-                </div>
-
-                <div class="col-md-2">
-                    <label for="state" class="form-label">State</label>
-                    <select class="form-select" id="state" required>
-                    <option value="">Choose...</option>
-                    <option value="PA">Pennsylvannia</option>
-                    <option value="NY">New York</option>
-                    <option value="CA">California</option>
-                    </select>
-                </div>
-
-                <div class="col-md-2">
-                    <label for="zip" class="form-label">Zip</label>
-                    <input type="zip" class="form-control" id="zip" name="zip" required>
                 </div>
             
                 <div class="col-12">
@@ -105,6 +80,8 @@
     <footer class="bg-dark text-white text-center py-3 mt-5">
         <p>&copy; @2026 Conference Event Website | IST 256 Group 3</p>
     </footer>
+
+    <script src="js/validation.js"></script>
 </body>
 
 </html>

@@ -73,34 +73,6 @@ function validateField(formField) {
                     errorMessage = 'Enter a valid US phone number (e.g., 123-456-7890)';
                 }
                 break;
-
-            case 'street':
-                if (value.length < 5 || value.length > 100) {
-                    isValid = false;
-                    errorMessage = 'Street address must be between 5 and 100 characters';
-                }
-                break;
-
-            case 'city':
-                if (!/^[A-Za-z\-\s.']{2,50}$/.test(value)) {
-                    isValid = false;
-                    errorMessage = 'Enter a valid city name';
-                }
-                break;
-
-            case 'state':
-                if (!/^[A-Z]{2}$/.test(value)) {
-                    isValid = false;
-                    errorMessage = 'Please select a valid 2-letter state code';
-                }
-                break;
-
-            case 'zip':
-                if (!/^\d{5}(-\d{4})?$/.test(value)) {
-                    isValid = false;
-                    errorMessage = 'Enter a valid ZIP code (12345 or 12345-6789)';
-                }
-                break;
         }
     }
 
@@ -138,12 +110,6 @@ function getFormData(form) {
         lastName: data.lastName,
         email: data.email,
         phone: data.phone,
-        address: {
-            street: data.street,
-            city: data.city,
-            state: data.state,
-            zip: data.zip
-        },
         creationDate: new Date().toISOString()
     };
 }
@@ -173,7 +139,7 @@ function displayUserCard(userData) {
             <div>
                 <h5>${userData.firstName} ${userData.lastName}</h5>
                 <p class="card-text">Email: ${userData.email}</p>
-                <p class="card-text">Address: ${userData.address.street}, ${userData.address.city}, ${userData.address.state} ${userData.address.zip}</p>
+                <p class="card-text">Phone: ${userData.phone}</p>
                 <button class="btn btn-danger">Delete User</button>
             </div>
         </div>
