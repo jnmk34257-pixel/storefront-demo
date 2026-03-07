@@ -1,5 +1,4 @@
-const STORAGE_KEY = 'storefront_user';
-
+// --- Validation Logic ---
 function getOrCreateErrorElement(formField) {
     const fieldId = formField.id;
     const existing = document.getElementById(fieldId + 'Error');
@@ -19,29 +18,25 @@ function updateField(formField, errorElement, isValid, errorMessage) {
     if (isValid) {
         formField.classList.add('is-valid');
         formField.classList.remove('is-invalid');
-
         errorElement.textContent = "";
         errorElement.classList.remove('show');
     }
     else {
         formField.classList.add('is-invalid');
         formField.classList.remove('is-valid');
-
         errorElement.textContent = errorMessage;
         errorElement.classList.add('show');
     }
 }
 
-
 function validateField(formField) {
     const fieldId = formField.id;
     const value = formField.value.trim();
-    const errorElement = getOrCreateErrorElement(formField);
+    if (fieldId === 'editIndex') return true; // Skip hidden field
 
+    const errorElement = getOrCreateErrorElement(formField);
     let isValid = true;
     let errorMessage = "";
-
-
 
     if (formField.hasAttribute('required') && value === ''){
         isValid = false;
@@ -60,7 +55,6 @@ function validateField(formField) {
 
             case 'email':
                 const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-
                 if (!emailPattern.test(value)) {
                     isValid = false;
                     errorMessage = 'Please enter a valid email';
@@ -77,15 +71,13 @@ function validateField(formField) {
     }
 
     updateField(formField, errorElement, isValid, errorMessage);
-
     return isValid;
 }
 
 function validateForm(form) {
-    // const form = document.getElementById("signupForm");
     let isValid = true;
-
-    const formInputs = form.querySelectorAll('input, select');
+    // Don't validate the hidden input
+    const formInputs = form.querySelectorAll('input:not([type="hidden"]), select');
     
     formInputs.forEach(formField => {
         if (!validateField(formField)) {
@@ -98,7 +90,6 @@ function validateForm(form) {
 
 function getFormData(form) {
     const formData = new FormData(form);
-
     const data = {};
 
     for(let [key, value] of formData.entries()) {
@@ -114,39 +105,75 @@ function getFormData(form) {
     };
 }
 
-function savaFormDataToLocalStorage(formData) {
-    try {
-        const userJSON = JSON.stringify(formData);
-        localStorage.setItem(STORAGE_KEY, userJSON);
-        console.log('Saved successfully!');
-        return true;
-    }
-    catch (error) {
-        console.log('Error saving to local storage:', error);
-        return false;
-    }
-    
-}
+// --- UI Display and Create,Update,Delete functions ---
+function renderUsers() {
+    const users = getSavedUsers(); //storage.js
+    const container = document.getElementById('userCardContainer');
+    if (!container) return;
 
-function displayUserCard(userData) {
-    const userCardContainer = document.getElementById('userCard');
-    if (!userCardContainer) {
-        return;
-    }
+    container.innerHTML = ''; // Clear existing cards
 
-    let cardHtml = `
-        <div class="card">
-            <div>
-                <h5>${userData.firstName} ${userData.lastName}</h5>
-                <p class="card-text">Email: ${userData.email}</p>
-                <p class="card-text">Phone: ${userData.phone}</p>
-                <button class="btn btn-danger">Delete User</button>
+    users.forEach((user, index) => {
+        const cardHtml = `
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">${user.firstName} ${user.lastName}</h5>
+                        <p class="card-text mb-1"><strong>Email:</strong> ${user.email}</p>
+                        <p class="card-text mb-3"><strong>Phone:</strong> ${user.phone}</p>
+                        <div class="d-flex gap-2">
+                            <button class="btn btn-sm btn-warning" onclick="editUser(${index})">Edit</button>
+                            <button class="btn btn-sm btn-danger" onclick="deleteUser(${index})">Delete</button>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
-    `;
-
-    userCardContainer.innerHTML = cardHtml;
+        `;
+        container.innerHTML += cardHtml;
+    });
 }
+
+window.editUser = function(index) {
+    const users = getSavedUsers();
+    const user = users[index];
+
+
+    document.getElementById('firstName').value = user.firstName;
+    document.getElementById('lastName').value = user.lastName;
+    document.getElementById('email').value = user.email;
+    document.getElementById('phone').value = user.phone;
+    
+
+    document.getElementById('editIndex').value = index;
+    document.getElementById('submitBtn').textContent = 'Update Sign Up';
+    
+    
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+};
+
+window.deleteUser = function(index) {
+    if (confirm("Are you sure you want to remove this user?")) {
+        const users = getSavedUsers();
+        users.splice(index, 1); 
+        saveUsersToLocalStorage(users); //in storage.js
+        renderUsers(); 
+    }
+};
+
+window.resetForm = function() {
+    const form = document.getElementById('signupForm');
+    form.reset();
+    document.getElementById('editIndex').value = "-1";
+    document.getElementById('submitBtn').textContent = 'Sign Up';
+    
+    // Clear validation styling
+    const inputs = form.querySelectorAll('input');
+    inputs.forEach(input => {
+        input.classList.remove('is-valid', 'is-invalid');
+        const errorMsg = document.getElementById(input.id + 'Error');
+        if (errorMsg) errorMsg.classList.remove('show');
+    });
+};
 
 function handleSignupSubmit(event) {
     event.preventDefault();
@@ -154,20 +181,29 @@ function handleSignupSubmit(event) {
     const form = event.currentTarget;
 
     if(!validateForm(form)) {
-        // window.alert('Form is not valid');
         return;
     }
 
     const formData = getFormData(form);
+    const users = getSavedUsers();
+    const editIndex = parseInt(document.getElementById('editIndex').value);
 
-    if(savaFormDataToLocalStorage(formData)) {
+    // If editIndex is greater than -1, we are updating. Otherwise, adding new.
+    if (editIndex > -1) {
+        formData.creationDate = users[editIndex].creationDate; // Preserve original signup date
+        users[editIndex] = formData;
+        window.alert('User updated successfully!');
+    } else {
+        users.push(formData);
         window.alert('You successfully signed up!');
     }
-    else {
+
+    if(saveUsersToLocalStorage(users)) {
+        window.resetForm();
+        renderUsers();
+    } else {
         window.alert('Sign up failed!!');
     }
-
-    displayUserCard(formData);
 }
 
 function initilizeApp() {
@@ -179,7 +215,7 @@ function initilizeApp() {
 
     signupForm.addEventListener('submit', handleSignupSubmit);
 
-    const formInputs = signupForm.querySelectorAll('input, select');
+    const formInputs = signupForm.querySelectorAll('input:not([type="hidden"]), select');
     formInputs.forEach(formField => {
         formField.addEventListener('blur', () => validateField(formField));
         formField.addEventListener('input', () => {
@@ -188,6 +224,9 @@ function initilizeApp() {
             }
         });
     });
+
+    // Render users immediately when the page loads
+    renderUsers();
 }
 
 document.addEventListener('DOMContentLoaded', initilizeApp);
