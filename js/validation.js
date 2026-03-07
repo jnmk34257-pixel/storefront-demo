@@ -206,6 +206,28 @@ function handleSignupSubmit(event) {
     }
 }
 
+window.exportToJsonFile = function() {
+    const users = getSavedUsers();
+
+    if (users.length === 0) {
+        window.alert('No users to export!');
+        return;
+    }
+
+    const jsonString = JSON.stringify(users, null, 2);
+    const blob = new Blob([jsonString], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const downloadLink = document.createElement('a');
+    downloadLink.href = url;
+    downloadLink.download = "conference_attendees.json";
+
+    document.body.appendChild(downloadLink);
+    downloadLink.click();
+    document.body.removeChild(downloadLink);
+    URL.revokeObjectURL(url);
+    
+}
+
 function initilizeApp() {
     const signupForm = document.getElementById('signupForm') || document.querySelector('form.needs-validation');
 
