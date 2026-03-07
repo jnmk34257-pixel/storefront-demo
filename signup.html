@@ -9,17 +9,13 @@
     <link rel="stylesheet" href="css/styles.css">
 </head>
 
-<!--DRY - do not repeat yourself-->
 <body>
-
     <nav class="navbar navbar-expand-lg bg-body-tertiary" data-bs-theme="dark">
         <div class="container-fluid">
             <a class="navbar-brand" href="index.html">Conference Event Website</a>
-
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
             </button>
-
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
@@ -29,11 +25,6 @@
                     <a class="nav-link active" href="signup.html">SignUp</a>
                     </li>
                 </ul>
-                <!--<ul class="d-flex navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item">
-                    <a class="nav-link" href="#">Cart</a>
-                    </li>
-                </ul> -->
             </div>
         </div>
     </nav>
@@ -43,17 +34,16 @@
             <h2 class="text-center mb-4">Sign Up</h2>
 
             <form id="signupForm" class="row g-3 needs-validation" novalidate>
+                <input type="hidden" id="editIndex" value="-1">
 
                 <div class="col-md-6">
                     <label for="firstName" class="form-label">First name</label>
                     <input type="text" class="form-control" id="firstName" name="firstName" placeholder="John" autocomplete="off" required>
-                
                 </div>
 
                 <div class="col-md-6">
                     <label for="lastName" class="form-label">Last name</label>
                     <input type="text" class="form-control" id="lastName" name="lastName" placeholder="Doe" autocomplete="off" required>
-                
                 </div>
 
                 <div class="col-md-6">
@@ -67,23 +57,25 @@
                 </div>
             
                 <div class="col-12">
-                    <button class="btn btn-primary" type="submit">Sign Up</button>
-                    <button class="btn btn-secondary" type="reset">Reset</button>
-
+                    <button id="submitBtn" class="btn btn-primary" type="submit">Sign Up</button>
+                    <button class="btn btn-secondary" type="button" onclick="resetForm()">Reset</button>
                 </div>
             </form>
         </div>    
+
+        <div class="d-flex justify-content-between align-items-center mt-5 mb-4"> 
+            <h3 class="text-white text-center mt-5 mb-4">Registered Attendees</h3>
+            <button class="btn btn-info" onclick="exportToJsonFile()">Export to JSON File</button>
+        </div>
+        <div id="userCardContainer" class="row g-4 mb-5 pb-5"></div>
     </div>
-
-
 
     <footer class="bg-dark text-white text-center py-3 mt-5">
         <p>&copy; @2026 Conference Event Website | IST 256 Group 3</p>
     </footer>
 
+    <script src="js/storage.js"></script>
     <script src="js/validation.js"></script>
 </body>
 
 </html>
-
-
