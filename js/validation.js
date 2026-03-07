@@ -67,6 +67,29 @@ function validateField(formField) {
                     errorMessage = 'Enter a valid US phone number (e.g., 123-456-7890)';
                 }
                 break;
+
+            case 'age':
+                if (!/^(?:[0-9]|[1-9][0-9]|1[0-1][0-9]|12[0-5])$/.test(value)){
+                    isValid = false;
+                    errorMessage = "Enter a valid age (e.g., 20)";
+                }
+                break;
+            
+            case 'city':
+                if(!/^[a-zA-Z\s-]+$/.test(value)){
+                    isValid = false;
+                    errorMessage = "Enter a valid city";
+
+                }
+                break;
+
+            case 'zip':
+                if(!/^\d{5}(?:[-\s]\d{4})?$/.test(value)){
+                    isValid = false;
+                    errorMessage = "Please enter a valid US zip code (e.g., 12345)";
+                }
+                break;
+        
         }
     }
 
@@ -101,6 +124,13 @@ function getFormData(form) {
         lastName: data.lastName,
         email: data.email,
         phone: data.phone,
+        age: data.age,
+        address: {
+            street: data.street,
+            city: data.city,
+            state: data.state,
+            zip: data.zip
+        },
         creationDate: new Date().toISOString()
     };
 }
@@ -120,7 +150,9 @@ function renderUsers() {
                     <div class="card-body">
                         <h5 class="card-title">${user.firstName} ${user.lastName}</h5>
                         <p class="card-text mb-1"><strong>Email:</strong> ${user.email}</p>
-                        <p class="card-text mb-3"><strong>Phone:</strong> ${user.phone}</p>
+                        <p class="card-text mb-1"><strong>Phone:</strong> ${user.phone}</p>
+                        <p class="card-text mb-1"><strong>Age:</strong> ${user.age}</p>
+                        <p class="card-text mb-3"><strong>Address:</strong> ${user.address.street}, ${user.address.city}, ${user.address.state} ${user.address.zip}</p>
                         <div class="d-flex gap-2">
                             <button class="btn btn-sm btn-warning" onclick="editUser(${index})">Edit</button>
                             <button class="btn btn-sm btn-danger" onclick="deleteUser(${index})">Delete</button>
@@ -142,8 +174,12 @@ window.editUser = function(index) {
     document.getElementById('lastName').value = user.lastName;
     document.getElementById('email').value = user.email;
     document.getElementById('phone').value = user.phone;
-    
+    document.getElementById('age').value = user.age;
 
+    document.getElementById('street').value = user.address.street;
+    document.getElementById('city').value = user.address.city;
+    document.getElementById('state').value = user.address.state;
+    
     document.getElementById('editIndex').value = index;
     document.getElementById('submitBtn').textContent = 'Update Sign Up';
     
@@ -228,7 +264,7 @@ window.exportToJsonFile = function() {
     
 }
 
-function initilizeApp() {
+function initializeApp() {
     const signupForm = document.getElementById('signupForm') || document.querySelector('form.needs-validation');
 
     if (!signupForm) {
@@ -251,4 +287,4 @@ function initilizeApp() {
     renderUsers();
 }
 
-document.addEventListener('DOMContentLoaded', initilizeApp);
+document.addEventListener('DOMContentLoaded', initializeApp);

@@ -3,7 +3,22 @@ const STORAGE_KEY = 'conference_users_list';
 function getSavedUsers() {
     try {
         const stored = localStorage.getItem(STORAGE_KEY);
-        return stored ? JSON.parse(stored) : [];
+        const list = stored ? JSON.parse(stored) : [];
+
+        
+        return list.map(user => {
+            if (!user.address) {
+                user.address = {
+                    street: user.street || "",
+                    city: user.city || "",
+                    state: user.state || "",
+                    zip: user.zip || ""
+                };
+            }
+            return user;
+        });
+
+
     } catch {
         return [];
     }
