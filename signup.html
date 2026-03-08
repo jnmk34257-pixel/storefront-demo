@@ -62,6 +62,11 @@
                 </div>
 
                 <div class="col-md-6">
+                    <label for="institution" class="form-label">Institution</label><strong class="text-danger">*</strong>
+                    <input type="text" class="form-control" id="institution" name="institution" placeholder="Penn State University" autocomplete="off" required>
+                </div>
+
+                <div class="col-md-12">
                     <label for="street" class="form-label">Street Address <strong class="text-danger">*</strong></label>
                     <input type="text" class="form-control" id="street" name="street" autocomplete="off" required>
                 </div>
@@ -128,17 +133,12 @@
                     </select>
                 </div>
 
-
                 <div class="col-md-4">
                     <label for="zip" class="form-label">Zip <strong class="text-danger">*</strong></label>
                     <input type="text" class="form-control" id="zip" name="zip" autocomplete="off" required>
                     <div class="text-danger" id="zipError"></div>
                 </div>
 
-
-
-
-            
                 <div class="col-12">
                     <button id="submitBtn" class="btn btn-primary" type="submit">Sign Up</button>
                     <button class="btn btn-secondary" type="button" onclick="resetForm()">Reset</button>

@@ -74,12 +74,18 @@ function validateField(formField) {
                     errorMessage = "Enter a valid age (e.g., 20)";
                 }
                 break;
+
+            case 'institution':
+                if (!/^[A-Za-z0-9\-\s.,&']{2,100}$/.test(value)) {
+                    isValid = false;
+                    errorMessage = "Enter a valid institution name";
+                }
+                break;
             
             case 'city':
                 if(!/^[a-zA-Z\s-]+$/.test(value)){
                     isValid = false;
                     errorMessage = "Enter a valid city";
-
                 }
                 break;
 
@@ -89,7 +95,6 @@ function validateField(formField) {
                     errorMessage = "Please enter a valid US zip code (e.g., 12345)";
                 }
                 break;
-        
         }
     }
 
@@ -125,6 +130,7 @@ function getFormData(form) {
         email: data.email,
         phone: data.phone,
         age: data.age,
+        institution: data.institution,
         address: {
             street: data.street,
             city: data.city,
@@ -149,6 +155,7 @@ function renderUsers() {
                 <div class="card h-100 shadow-sm">
                     <div class="card-body">
                         <h5 class="card-title">${user.firstName} ${user.lastName}</h5>
+                        <p class="card-text mb-1"><strong>Institution:</strong> ${user.institution}</p>
                         <p class="card-text mb-1"><strong>Email:</strong> ${user.email}</p>
                         <p class="card-text mb-1"><strong>Phone:</strong> ${user.phone}</p>
                         <p class="card-text mb-1"><strong>Age:</strong> ${user.age}</p>
@@ -169,20 +176,20 @@ window.editUser = function(index) {
     const users = getSavedUsers();
     const user = users[index];
 
-
+    // Populate all text inputs
     document.getElementById('firstName').value = user.firstName;
     document.getElementById('lastName').value = user.lastName;
     document.getElementById('email').value = user.email;
     document.getElementById('phone').value = user.phone;
     document.getElementById('age').value = user.age;
-
+    document.getElementById('institution').value = user.institution;
     document.getElementById('street').value = user.address.street;
     document.getElementById('city').value = user.address.city;
     document.getElementById('state').value = user.address.state;
+    document.getElementById('zip').value = user.address.zip; 
     
     document.getElementById('editIndex').value = index;
     document.getElementById('submitBtn').textContent = 'Update Sign Up';
-    
     
     window.scrollTo({ top: 0, behavior: 'smooth' });
 };
@@ -261,7 +268,6 @@ window.exportToJsonFile = function() {
     downloadLink.click();
     document.body.removeChild(downloadLink);
     URL.revokeObjectURL(url);
-    
 }
 
 function initializeApp() {
