@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Conference Events Details</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+    <link rel="stylesheet" href="css/styles.css">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg bg-body-tertiary" data-bs-theme="dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="index.html">Conference Event Website</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="signup.html">SignUp</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="events.html">Events</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+   <div class="container my-5">
+        <div class="card border-0 shadow-sm bg-light rounded-4 overflow-hidden mb-5">
+            <div class="card-body p-5 text-center">
+                <div class="row justify-content-center">
+                    <div class="col-lg-8">
+                        <h1 class="display-5 fw-bold text-primary mb-3">Session & Workshop Details</h1>
+                        <p class="lead text-muted mb-4">
+                            Explore our curated list of events. Use the search below to find specific 
+                            technical workshops, keynote speakers, or networking sessions.
+                        </p>
+
+                        <div class="position-relative" id="eventSearchContainer">
+                            <div class="input-group input-group-lg shadow-sm">
+                                <span class="input-group-text bg-white border-end-0">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-search text-muted" viewBox="0 0 16 16">
+                                        <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+                                    </svg>
+                                </span>
+                                <input type="text" id="eventSearch" class="form-control border-start-0 ps-0" placeholder="Search events by title or ID (e.g., EVT-001)..." autocomplete="off">
+                                <button class="btn btn-primary px-4" id="searchBtn" type="button">Find Event</button>
+                            </div>
+                            <ul class="list-group position-absolute w-100 shadow text-start" id="eventSuggestionBox" style="display: none; z-index: 1000; top: 100%;"></ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="eventDetailsResult" class="row justify-content-center" style="display: none;"></div>
+        <div id="eventErrorMessage" class="alert alert-danger text-center mx-auto" style="display: none; max-width: 600px;"></div>
+    </div>
+
+    <div class="container my-5">
+        <div class="card border-0 shadow-sm bg-light rounded-4 overflow-hidden mb-5">
+            <div class="card-body p-5">
+            <h2 class="fw-bold text-primary mb-4">Add / Edit Sessions</h2>
+                <form id="eventForm">
+                    <input type="hidden" id="editIndex" value="-1">
+
+                    <div class="mb-3">
+                        <label for="eventTitle" class="form-label">Session Title *</label>
+                        <input type="text" class="form-control" id="eventTitle" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="eventCategory" class="form-label">Category *</label>
+                        <select class="form-select" id="eventCategory" required>
+                            <option value="">Select Category</option>
+                            <option value="Workshop">Workshop</option>
+                            <option value="Keynote">Keynote</option>
+                            <option value="Panel">Panel</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="eventTime" class="form-label">Time / Duration *</label>
+                        <input type="text" class="form-control" id="eventTime" required placeholder="e.g., 9:00 AM - 10:30 AM">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="eventFee" class="form-label">Registration Fee</label>
+                        <input type="text" class="form-control" id="eventFee" placeholder="Enter amount or 'Free'" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="eventSpeaker" class="form-label">Speaker / Host</label>
+                        <input type="text" class="form-control" id="eventSpeaker">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="eventLocation" class="form-label">Location</label>
+                        <input type="text" class="form-control" id="eventLocation">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="eventDescription" class="form-label">Description</label>
+                        <textarea class="form-control" id="eventDescription" rows="3"></textarea>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="eventSeats" class="form-label">Seats Available *</label>
+                        <input type="number" class="form-control" id="eventSeats" required min="0">
+                    </div>
+
+                    <button type="submit" class="btn btn-primary" id="eventSubmitBtn">Add Event</button>
+                    <button type="button" class="btn btn-secondary" id="eventResetBtn">Reset</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+
+
+    <footer class="bg-dark text-white text-center py-3 mt-5">
+        <p>&copy; @2026 Conference Event Website | IST 256 Group 3</p>
+    </footer>
+
+    <script src="js/events.js"></script>
+</body>
+</html>

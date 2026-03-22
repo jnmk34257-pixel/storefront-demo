@@ -25,3 +25,11 @@ body{
     text-shadow: 0 2px 10px rgba(29, 43, 100, 0.45);
 }
 
+#eventSearch:focus { 
+    box-shadow: none;
+    border-color: #1d2b64;
+}
+
+.input-group:focus-within .input-group-text {
+    border-color: #1d2b64;
+}
