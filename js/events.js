@@ -1,79 +1,94 @@
 $(document).ready(function() {
-    let eventsData = [];
+    const EVENTS_STORAGE_KEY = 'conference_events_catalog';
 
-    // Fetch the JSON document using jQuery
+    // Fetch the catalog from events.json
     $.getJSON("events.json", function(data) {
-        eventsData = data;
+        
+        localStorage.setItem(EVENTS_STORAGE_KEY, JSON.stringify(data));
+        
+        
+        setupEventPage();
     }).fail(function() {
-        console.error("Could not load events.json. Make sure you are using a local web server (like Live Server).");
+        console.error("Could not load events.json. Make sure you are using VS Code Live Server.");
+        //If fetch fails but we have old data in storage, use it anyway
+        if (localStorage.getItem(EVENTS_STORAGE_KEY)) {
+            setupEventPage();
+        } else {
+            $('#eventErrorMessage').text("Error loading event catalog. Please start a local server.").show();
+        }
     });
 
-    const $searchInput = $('#eventSearch');
-    const $suggestionBox = $('#eventSuggestionBox');
+    // Main function that handles searching and updating the UI
+    function setupEventPage() {
+        // Retrieve the data from Local Storage 
+        const storedCatalog = localStorage.getItem(EVENTS_STORAGE_KEY);
+        const eventsData = storedCatalog ? JSON.parse(storedCatalog) : [];
 
-    //  Interactive Element: Auto-Suggestions on input
-    $searchInput.on('input', function() {
-        const query = $(this).val().toLowerCase();
-        $suggestionBox.empty().hide();
+        const $searchInput = $('#eventSearch');
+        const $suggestionBox = $('#eventSuggestionBox');
 
-        if (query.length > 0) {
-            const matches = eventsData.filter(event => 
-                event.title.toLowerCase().includes(query) || 
-                event.id.toLowerCase().includes(query)
+        // Auto-Suggestions on input
+        $searchInput.on('input', function() {
+            const query = $(this).val().toLowerCase();
+            $suggestionBox.empty().hide();
+
+            if (query.length > 0) {
+                
+                const matches = eventsData.filter(event => 
+                    event.title.toLowerCase().includes(query) || 
+                    event.id.toLowerCase().includes(query)
+                );
+
+                if (matches.length > 0) {
+                    matches.forEach(match => {
+                        $suggestionBox.append(`
+                            <li class="list-group-item list-group-item-action suggestion-item" data-id="${match.id}" style="cursor: pointer;">
+                                <strong>${match.title}</strong> <span class="badge bg-secondary float-end">${match.id}</span>
+                            </li>
+                        `);
+                    });
+                    $suggestionBox.show();
+                }
+            }
+        });
+
+        // clicking a specific auto-suggestion
+        $(document).on('click', '.suggestion-item', function() {
+            const selectedId = $(this).data('id');
+            const exactMatch = eventsData.find(event => event.id === selectedId);
+            
+            $searchInput.val(exactMatch.title);
+            $suggestionBox.hide();
+            renderEventDetails(exactMatch);
+        });
+
+        // manual search button click
+        $('#searchBtn').click(function() {
+            const query = $searchInput.val().trim().toLowerCase();
+            if (!query) return;
+
+            const foundEvent = eventsData.find(event => 
+                event.title.toLowerCase() === query || 
+                event.id.toLowerCase() === query
             );
 
-            if (matches.length > 0) {
-                matches.forEach(match => {
-                    $suggestionBox.append(`
-                        <li class="list-group-item list-group-item-action suggestion-item" data-id="${match.id}" style="cursor: pointer;">
-                            <strong>${match.title}</strong> <span class="badge bg-secondary float-end">${match.id}</span>
-                        </li>
-                    `);
-                });
-                $suggestionBox.show();
+            if (foundEvent) {
+                renderEventDetails(foundEvent);
+            } else {
+                $('#eventDetailsResult').hide();
+                $('#eventErrorMessage').text("Event not found. Please try another search.").fadeIn();
             }
-        }
-    });
+        });
 
-    // Handle clicking a specific auto-suggestion
-    $(document).on('click', '.suggestion-item', function() {
-        const selectedId = $(this).data('id');
-        
-        const exactMatch = eventsData.find(event => event.id === selectedId);
-        
-        $searchInput.val(exactMatch.title);
-        $suggestionBox.hide();
-        
-        renderEventDetails(exactMatch);
-    });
+        // Hide suggestions if clicking outside the search container
+        $(document).click(function(e) {
+            if (!$(e.target).closest('#eventSearchContainer').length) {
+                $suggestionBox.hide();
+            }
+        });
+    }
 
-    // manual search button click
-    $('#searchBtn').click(function() {
-        const query = $searchInput.val().trim().toLowerCase();
-        
-        if (!query) return;
-
-        const foundEvent = eventsData.find(event => 
-            event.title.toLowerCase() === query || 
-            event.id.toLowerCase() === query
-        );
-
-        if (foundEvent) {
-            renderEventDetails(foundEvent);
-        } else {
-            $('#eventDetailsResult').hide();
-            $('#eventErrorMessage').text("Event not found. Please try another search.").fadeIn();
-        }
-    });
-
-    // Hide suggestions if clicking outside the search container
-    $(document).click(function(e) {
-        if (!$(e.target).closest('#eventSearchContainer').length) {
-            $suggestionBox.hide();
-        }
-    });
-
-    // Update the Page with Product (Event) Details
+    // Update the DOM with the Event Details
     function renderEventDetails(event) {
         $('#eventErrorMessage').hide();
         const $container = $('#eventDetailsResult');
@@ -119,7 +134,6 @@ $(document).ready(function() {
             </div>
         `;
 
-        // smooth UI transition
         $container.hide().html(detailsHtml).fadeIn();
     }
 });
