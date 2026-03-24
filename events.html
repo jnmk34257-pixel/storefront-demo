@@ -58,6 +58,68 @@
         <div id="eventErrorMessage" class="alert alert-danger text-center mx-auto" style="display: none; max-width: 600px;"></div>
     </div>
 
+    <div class="container my-5">
+        <div class="card border-0 shadow-sm bg-light rounded-4 overflow-hidden mb-5">
+            <div class="card-body p-5">
+            <h2 class="fw-bold text-primary mb-4">Add / Edit Sessions</h2>
+                <form id="eventForm">
+                    <input type="hidden" id="editIndex" value="-1">
+
+                    <div class="mb-3">
+                        <label for="eventTitle" class="form-label">Session Title *</label>
+                        <input type="text" class="form-control" id="eventTitle" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="eventCategory" class="form-label">Category *</label>
+                        <select class="form-select" id="eventCategory" required>
+                            <option value="">Select Category</option>
+                            <option value="Workshop">Workshop</option>
+                            <option value="Keynote">Keynote</option>
+                            <option value="Panel">Panel</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="eventTime" class="form-label">Time / Duration *</label>
+                        <input type="text" class="form-control" id="eventTime" required placeholder="e.g., 9:00 AM - 10:30 AM">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="eventFee" class="form-label">Registration Fee</label>
+                        <input type="text" class="form-control" id="eventFee" placeholder="Enter amount or 'Free'" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="eventSpeaker" class="form-label">Speaker / Host</label>
+                        <input type="text" class="form-control" id="eventSpeaker">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="eventLocation" class="form-label">Location</label>
+                        <input type="text" class="form-control" id="eventLocation">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="eventDescription" class="form-label">Description</label>
+                        <textarea class="form-control" id="eventDescription" rows="3"></textarea>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="eventSeats" class="form-label">Seats Available *</label>
+                        <input type="number" class="form-control" id="eventSeats" required min="0">
+                    </div>
+
+                    <button type="submit" class="btn btn-primary" id="eventSubmitBtn">Add Event</button>
+                    <button type="button" class="btn btn-secondary" id="eventResetBtn">Reset</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+
+
     <footer class="bg-dark text-white text-center py-3 mt-5">
         <p>&copy; @2026 Conference Event Website | IST 256 Group 3</p>
     </footer>
