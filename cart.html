@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>My Schedule - Conference Event</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+    <link rel="stylesheet" href="css/styles.css">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+</head>
+<body class="bg-light">
+    <nav class="navbar navbar-expand-lg bg-body-tertiary" data-bs-theme="dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="index.html">Conference Event Website</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="signup.html">SignUp</a></li>
+                    <li class="nav-item"><a class="nav-link" href="events.html">Events</a></li>
+                </ul>
+                <ul class="d-flex navbar-nav mb-2 mb-lg-0">
+                    <li class="nav-item"><a class="nav-link active" href="cart.html">My Schedule (Cart)</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container my-5">
+        <div class="row g-5">
+            <div class="col-lg-7">
+                <div class="card border-0 shadow-sm rounded-4 mb-4">
+                    <div class="card-body p-4">
+                        <h3 class="fw-bold text-primary mb-3">Search Sessions</h3>
+                        <div class="input-group mb-4">
+                            <input type="text" id="cartSearchInput" class="form-control" placeholder="Search events by title or speaker...">
+                            <button class="btn btn-outline-secondary" type="button" id="clearSearchBtn">Clear</button>
+                        </div>
+                        <div id="catalogResults" class="row g-3">
+                            </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-5">
+                <div class="card border-0 shadow-sm rounded-4 mb-4">
+                    <div class="card-body p-4 bg-white rounded-4">
+                        <h3 class="fw-bold text-success mb-3">My Selected Sessions</h3>
+                        <ul class="list-group mb-3" id="cartItemsList">
+                            </ul>
+                        <div id="emptyCartMsg" class="text-muted text-center my-3">Your schedule is currently empty.</div>
+                    </div>
+                </div>
+
+                <div class="card border-0 shadow-sm rounded-4">
+                    <div class="card-body p-4">
+                        <h4 class="fw-bold mb-3">Finalize Registration</h4>
+                        <form id="checkoutForm" novalidate>
+                            <div class="mb-3">
+                                <label for="attendeeEmail" class="form-label">Confirmation Email *</label>
+                                <input type="email" class="form-control" id="attendeeEmail" required>
+                                <div class="invalid-feedback" id="emailError">Please provide a valid email address.</div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="specialRequests" class="form-label">Special Accommodations</label>
+                                <textarea class="form-control" id="specialRequests" rows="2"></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary w-100 btn-lg" id="checkoutBtn" disabled>Submit Schedule</button>
+                        </form>
+                        <div id="ajaxResponse" class="mt-3" style="display: none;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="bg-dark text-white text-center py-3 mt-5">
+        <p>&copy; @2026 Conference Event Website | IST 256 Group 3</p>
+    </footer>
+
+    <script src="js/cart.js"></script>
+</body>
+</html>
