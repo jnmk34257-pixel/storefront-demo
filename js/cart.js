@@ -16,10 +16,11 @@ $(document).ready(function() {
         const query = $(this).val().toLowerCase();
         
         // Search JSON document collection
-        const filteredCatalog = catalog.filter(event => 
-            event.title.toLowerCase().includes(query) || 
-            event.speaker.toLowerCase().includes(query)
-        );
+        const filteredCatalog = $.grep(catalog, function(event) {
+            return event.title.toLowerCase().includes(query) ||
+                event.speaker.toLowerCase().includes(query) ||
+                event.category.toLowerCase().includes(query);  // also search category
+        });
         renderCatalog(filteredCatalog);
     });
 
@@ -27,6 +28,17 @@ $(document).ready(function() {
         $('#cartSearchInput').val('');
         renderCatalog(catalog);
     });
+
+
+    //showAlert helper function
+    function showAlert(message, type) {
+        const $alert = $(`<div class="alert alert-${type} alert-dismissible fade show py-2 small" role="alert">
+            ${message}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>`);
+        $('#alertArea').prepend($alert);
+        setTimeout(function() { $alert.alert('close'); }, 4000);
+    }
 
     //---Adding and Removing Items from Cart with jQuery---
     
@@ -41,7 +53,7 @@ $(document).ready(function() {
             saveCart();
             renderCart();
         } else {
-            alert("This session is already in your schedule!");
+            showAlert("This session is already in your schedule!", "warning");
         }
     });
 
