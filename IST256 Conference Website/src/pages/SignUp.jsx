@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { getSavedUsers, saveUsersToLocalStorage } from '../utils/storage';
+import defaultUsers from '../data/users.json';
 
 const initialFormState = {
     firstName: '', lastName: '', email: '', phone: '',
@@ -19,7 +20,13 @@ const SignUp = () => {
 
     // Load initial users
     useEffect(() => {
-        setUsers(getSavedUsers());
+        const savedUsers = getSavedUsers();
+        if (!savedUsers || savedUsers.length === 0) {
+            setUsers(defaultUsers);
+            saveUsersToLocalStorage(defaultUsers);
+        } else {
+            setUsers(savedUsers);
+        }
     }, []);
 
     // --- VALIDATION LOGIC (From your validation.js) ---
