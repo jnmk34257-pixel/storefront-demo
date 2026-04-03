@@ -1,5 +1,6 @@
 // src/context/EventContext.js
 import React, { createContext, useState, useEffect } from 'react';
+import defaultEvents from '../data/events.json'; // Import default events
 
 export const EventContext = createContext();
 
@@ -13,29 +14,17 @@ export const EventProvider = ({ children }) => {
         
         if (!localData) {
             // 2. If localStorage is empty, fetch the default events from your JSON file
-            fetch('/events.json')
-                .then(res => {
-                    if (!res.ok) throw new Error("Could not find events.json");
-                    return res.json();
-                })
-                .then(data => {
-                    setEvents(data);
-                    // Save it so future refreshes use the local version (with any edits)
-                    localStorage.setItem('conference_events_catalog', JSON.stringify(data));
-                })
-                .catch(err => console.error("Error loading initial events:", err));
+            setEvents(defaultEvents);
+            localStorage.setItem('conference_events_catalog', JSON.stringify(defaultEvents));
         } else {
             // 3. If data exists in localStorage, use that (it contains your Add/Edit changes)
             setEvents(localData);
         }
+        // Load cart from localStorage
+        const savedCart = JSON.parse(localStorage.getItem('conference_user_cart')) || [];
+        setCart(savedCart);
+    }, []);
 
-        // Also load the user's cart/schedule
-        const storedCart = JSON.parse(localStorage.getItem('conference_user_cart')) || [];
-        setCart(storedCart);
-    }, []); 
-    // The empty array [] means this only runs ONCE when the app starts.
-
-    // Helper functions to manage the cart
     const addToCart = (event) => {
         if (!cart.find(item => item.id === event.id)) {
             const newCart = [...cart, event];
