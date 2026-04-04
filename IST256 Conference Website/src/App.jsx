@@ -11,6 +11,7 @@ import Home from './pages/Home';
 import SignUp from './pages/SignUp';
 import EventsPage from './pages/EventsPage';
 import Cart from './pages/Cart';
+import Checkout from './pages/Checkout';
 
 // Import Global State
 import { EventProvider } from './context/EventContext';
@@ -32,6 +33,7 @@ function App() {
               <Route path="/signup" element={<SignUp />} />
               <Route path="/events" element={<EventsPage />} />
               <Route path="/cart" element={<Cart />} />
+              <Route path="/checkout" element={<Checkout />} />
             </Routes>
           </main>
 
