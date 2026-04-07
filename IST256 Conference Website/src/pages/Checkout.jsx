@@ -13,10 +13,42 @@ const Checkout = () => {
     const [specialRequests, setSpecialRequests] = useState('');
     
     // UI State
-    const [nameError, setNameError] = useState(false);
-    const [emailError, setEmailError] = useState(false);
+    const [error, setError] = useState({ fullName: '', email: '' });
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [ajaxResponse, setAjaxResponse] = useState(null);
+
+    const validateField = (name, value) => {
+        let errorMsg = '';
+        if (!value.trim()) {
+            return "This field is required.";
+        }
+
+        switch(name) {
+            case 'fullName':
+                if (!/^[A-Za-z\-\s']{2,50}$/.test(value)) errorMsg = '2-50 letters, spaces, apostrophes, or hyphens allowed';
+                break;
+            case 'email':
+                if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(value)) errorMsg = 'Enter a valid email';
+                break;
+            default:
+                break;
+        }
+        return errorMsg;
+    };
+
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        if (name === 'fullName') setFullName(value);
+        if (name === 'email') setEmail(value);
+
+        const errorMsg = validateField(name, value);
+        setError(prev => ({ ...prev, [name]: errorMsg }));
+    }
+
+    const getInputClass = (fieldName) => {
+        if (!error || !error[fieldName]) return '';
+        return 'form-control is-invalid';
+    }
 
     // If the user gets here with an empty cart, prompt to go back
     if (cart.length === 0 && !ajaxResponse) {
@@ -98,21 +130,21 @@ const Checkout = () => {
                                     <div className="mb-3">
                                         <label className="form-label">Full Name *</label>
                                         <input 
-                                            type="text" className={`form-control ${nameError ? 'is-invalid' : ''}`}
-                                            value={fullName} onChange={(e) => { setFullName(e.target.value); setNameError(false); }}
+                                            type="text" className={`form-control ${getInputClass('fullName')}`}
+                                            value={fullName} onChange={handleInputChange} name="fullName"
                                             required 
                                         />
-                                        {nameError && <div className="invalid-feedback">Please provide your name.</div>}
+                                        {error.fullName && <div className="invalid-feedback">{error.fullName}</div>}
                                     </div>
 
                                     <div className="mb-3">
                                         <label className="form-label">Confirmation Email *</label>
                                         <input 
-                                            type="email" className={`form-control ${emailError ? 'is-invalid' : ''}`}
-                                            value={email} onChange={(e) => { setEmail(e.target.value); setEmailError(false); }}
+                                            type="email" className={`form-control ${getInputClass('email')}`}
+                                            value={email} onChange={handleInputChange} name="email"
                                             required 
                                         />
-                                        {emailError && <div className="invalid-feedback">Please provide a valid email address.</div>}
+                                        {error.email && <div className ="invalid-feedback">{error.email}</div>}
                                     </div>
 
                                     <div className="mb-4">
