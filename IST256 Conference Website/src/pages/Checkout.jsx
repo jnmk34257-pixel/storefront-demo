@@ -45,10 +45,11 @@ const Checkout = () => {
         setError(prev => ({ ...prev, [name]: errorMsg }));
     }
 
-    const getInputClass = (fieldName) => {
-        if (!error || !error[fieldName]) return '';
-        return 'form-control is-invalid';
-    }
+    const getInputClass = (fieldName, value) => {
+        if (error[fieldName]) return "form-control is-invalid";
+        if (value && !error[fieldName]) return "form-control is-valid";
+        return "form-control";
+    };
 
     // If the user gets here with an empty cart, prompt to go back
     if (cart.length === 0 && !ajaxResponse) {
@@ -130,7 +131,7 @@ const Checkout = () => {
                                     <div className="mb-3">
                                         <label className="form-label">Full Name *</label>
                                         <input 
-                                            type="text" className={`form-control ${getInputClass('fullName')}`}
+                                            type="text" className={getInputClass('fullName', fullName)}
                                             value={fullName} onChange={handleInputChange} name="fullName"
                                             required 
                                         />
@@ -140,7 +141,7 @@ const Checkout = () => {
                                     <div className="mb-3">
                                         <label className="form-label">Confirmation Email *</label>
                                         <input 
-                                            type="email" className={`form-control ${getInputClass('email')}`}
+                                            type="email" className={getInputClass('email', email)}
                                             value={email} onChange={handleInputChange} name="email"
                                             required 
                                         />
