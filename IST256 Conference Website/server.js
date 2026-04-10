@@ -11,7 +11,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-const DATA_FILE = path.join(__dirname, 'data.json');
+const DATA_FILE = path.join(__dirname, 'src', 'data', 'submissions.json');
 
 const readSubmissions = () => {
     if (!fs.existsSync(DATA_FILE)) {
@@ -42,7 +42,7 @@ app.post('/api/submissions', (req, res) => {
         const newSubmission = {
             id: `ORD-${Date.now()}`,
             ...req.body,
-            status: 'Pending'
+            status: 'pending'
         };
         submissions.push(newSubmission);
         writeSubmissions(submissions);

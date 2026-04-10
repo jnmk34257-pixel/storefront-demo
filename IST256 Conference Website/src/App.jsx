@@ -12,6 +12,8 @@ import SignUp from './pages/SignUp';
 import EventsPage from './pages/EventsPage';
 import Cart from './pages/Cart';
 import Checkout from './pages/Checkout';
+import OrderHistory from './pages/OrderHistory';
+import AdminApproval from './pages/AdminApproval';
 
 // Import Global State
 import { EventProvider } from './context/EventContext';
@@ -34,6 +36,8 @@ function App() {
               <Route path="/events" element={<EventsPage />} />
               <Route path="/cart" element={<Cart />} />
               <Route path="/checkout" element={<Checkout />} />
+              <Route path="/orders" element={<OrderHistory />} />
+              <Route path="/admin" element={<AdminApproval />} />
             </Routes>
           </main>
 

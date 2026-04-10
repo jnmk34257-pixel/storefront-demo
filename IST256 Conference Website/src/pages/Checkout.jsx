@@ -64,11 +64,25 @@ const Checkout = () => {
 
     const handleCheckout = async (e) => {
         e.preventDefault();
-        
+
+        let formErrors = {};
         let isValid = true;
-        if (!fullName.trim()) { setNameError(true); isValid = false; } else { setNameError(false); }
-        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) { setEmailError(true); isValid = false; } else { setEmailError(false); }
-        if (!isValid) return; 
+
+        const nameError = validateField('fullName', fullName);
+        const emailError = validateField('email', email);
+
+        if (nameError) {
+            formErrors.fullName = nameError;
+            isValid = false;
+        }
+
+        if (emailError) {
+            formErrors.email = emailError;
+            isValid = false;
+        }
+
+        setError(formErrors);
+        if (!isValid) return;
 
         setIsSubmitting(true);
         setAjaxResponse(null);
@@ -83,7 +97,7 @@ const Checkout = () => {
         };
 
         try {
-            //L10 
+            //L10 change - actual node.js server endpoint instead of mock API
             const response = await fetch('http://localhost:5000/api/submissions', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },

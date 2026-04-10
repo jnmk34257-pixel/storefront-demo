@@ -19,6 +19,9 @@ const Navbar = () => {
                         <li className="nav-item">
                             <Link className="nav-link" to="/events">Events</Link>
                         </li>
+                        <li className="nav-item">
+                            <Link className="nav-link" to="/orders">Order History</Link>
+                        </li>
                     </ul>
 
                     <div className="d-flex">
@@ -26,6 +29,13 @@ const Navbar = () => {
                             <li className="nav-item">
                                 <Link className="nav-link btn text-info px-3" to="/cart">
                                     My Schedule
+                                </Link>
+                            </li>
+                        </ul>
+                        <ul className="navbar-nav me-2">
+                            <li className="nav-item">
+                                <Link className="nav-link btn text-info px-3" to="/admin">
+                                    Admin
                                 </Link>
                             </li>
                         </ul>
