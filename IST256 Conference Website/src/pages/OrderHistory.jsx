@@ -33,7 +33,14 @@ const OrderHistory = () => {
 
     return (
         <div className="container my-5">
-            <h2 className="mb-4 text-primary fw-bold">My Order History</h2>
+            <div className="card border-0 shadow-sm rounded-4 mb-5">
+                <div className="card-body p-4 d-flex align-items-center">
+                    <div>
+                        <h2 className="text-primary fw-bold mb-0">My Order History</h2>
+                        <span className="text-muted small">View the status of your past and current session registrations.</span>
+                    </div>
+                </div>
+            </div>
             
             {loading && <p>Loading your orders...</p>}
             {error && <div className="alert alert-danger">{error}</div>}

@@ -42,9 +42,17 @@ const AdminApproval = () => {
     };
 
     return (
-        <div className="container my-5">
-            <h2 className="mb-4 text-danger fw-bold">Admin Dashboard: Pending Approvals</h2>
-            
+
+         <div className="container my-5">
+            <div className="card border-0 shadow-sm rounded-4 mb-5">
+                <div className="card-body p-4 d-flex align-items-center">
+                    <div>
+                        <h2 className="text-danger fw-bold mb-0">Admin Dashboard: Pending Approvals</h2>
+                        <span className="text-muted small">Review and approve pending registration requests.</span>
+                    </div>
+                </div>
+            </div>
+
             {loading ? (
                 <p>Loading pending requests...</p>
             ) : pendingOrders.length === 0 ? (
