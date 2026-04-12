@@ -1,0 +1,48 @@
+[
+  {
+    "firstName": "John",
+    "lastName": "Doe",
+    "email": "john.doe@example.com",
+    "phone": "123-456-7890",
+    "age": "30",
+    "institution": "Penn State University",
+    "address": {
+      "street": "123 University Ave",
+      "city": "State College",
+      "state": "PA",
+      "zip": "16801"
+    },
+    "creationDate": "2024-02-15T09:30:00.000Z"
+  },
+  {
+    "firstName": "Sarah",
+    "lastName": "Rodriguez",
+    "email": "srod@cyber-solutions.com",
+    "phone": "512-555-8899",
+    "age": "29",
+    "institution": "Data Privacy Council",
+    "address": {
+      "street": "8808 Congress Ave",
+      "city": "Austin",
+      "state": "TX",
+      "zip": "78701"
+    },
+    "creationDate": "2024-03-10T14:20:00.000Z"
+  },
+  {
+    "firstName": "David",
+    "lastName": "Kim",
+    "email": "dkim@empire-state.edu",
+    "phone": "212-555-4433",
+    "age": "42",
+    "institution": "New York University",
+    "address": {
+      "street": "70 Washington Square",
+      "city": "New York",
+      "state": "NY",
+      "zip": "10012"
+    },
+    "creationDate": "2024-03-22T11:45:00.000Z"
+  }
+
+]

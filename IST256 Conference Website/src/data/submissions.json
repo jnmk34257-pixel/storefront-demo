@@ -1,0 +1,31 @@
+[
+  {
+    "id": "ORD-1775849630954",
+    "name": "John",
+    "email": "John@apple.com",
+    "participationType": "virtual",
+    "specialRequests": "",
+    "scheduledEvents": [
+      {
+        "id": "EVT-001",
+        "title": "Keynote: The Future of AI in Tech",
+        "speaker": "Dr. Sarah Jenkins",
+        "time": "9:00 AM - 10:30 AM",
+        "location": "Main Auditorium",
+        "description": "Join our opening keynote as Dr. Jenkins explores the ethical implications and future capabilities of artificial intelligence in modern software development.",
+        "seatsAvailable": 150
+      },
+      {
+        "id": "EVT-002",
+        "title": "Workshop: Hands-on React Native",
+        "speaker": "Prof. Mark Thompson",
+        "time": "11:00 AM - 1:00 PM",
+        "location": "Lab 204",
+        "description": "A deep dive into building cross-platform mobile applications using React Native. Bring your laptops! Pre-requisite: Basic JavaScript knowledge.",
+        "seatsAvailable": 35
+      }
+    ],
+    "submissionTime": "2026-04-10T19:33:50.887Z",
+    "status": "pending"
+  }
+]
