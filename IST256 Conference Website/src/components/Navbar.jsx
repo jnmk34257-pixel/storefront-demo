@@ -2,6 +2,27 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
 const Navbar = () => {
+    const [pendingCount, setPendingCount] = useState(0);
+
+    useEffect(() => {
+        fetchPendingCount();
+        const interval = setInterval(fetchPendingCount, 10000);
+        return () => clearInterval(interval);
+    }, []);
+
+    const fetchPendingCount = async () => {
+        try {
+            const response = await fetch('http://localhost:5000/api/submissions');
+            if (!response.ok) return;
+            const data = await response.json();
+            const count = data.filter(order => order.status === 'pending').length;
+            setPendingCount(count);
+        } catch (err) {
+            // silently fail if server is off
+        }
+    };
+
+
     return (
         <nav className="navbar navbar-expand-lg bg-body-tertiary" data-bs-theme="dark">
             <div className="container-fluid">
@@ -49,26 +70,6 @@ const Navbar = () => {
             </div>
         </nav>
     );
-};
-
-const [pendingCount, setPendingCount] = useState(0);
-
-useEffect(() => {
-    fetchPendingCount();
-    const interval = setInterval(fetchPendingCount, 10000);
-    return () => clearInterval(interval);
-}, []);
-
-const fetchPendingCount = async () => {
-    try {
-        const response = await fetch('http://localhost:5000/api/submissions');
-        if (!response.ok) return;
-        const data = await response.json();
-        const count = data.filter(order => order.status === 'pending').length;
-        setPendingCount(count);
-    } catch (err) {
-        // silently fail if server is off
-    }
 };
 
 export default Navbar;
