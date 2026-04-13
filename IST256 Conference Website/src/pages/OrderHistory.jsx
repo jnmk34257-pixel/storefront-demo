@@ -79,7 +79,7 @@ const OrderHistory = () => {
                 <div className="alert alert-info">No previous orders found.</div>
             ) : (
                 <div className="row g-4">
-                    {orders.map(order => (
+                    {sortedOrders.map(order => (
                         <div className="col-md-6" key={order.id}>
                             <div className="card shadow-sm border-0 h-100">
                                 <div className="card-header bg-white d-flex justify-content-between align-items-center border-bottom-0 pt-3">
