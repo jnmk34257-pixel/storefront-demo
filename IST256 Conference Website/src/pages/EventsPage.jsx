@@ -159,7 +159,7 @@ const EventsPage = () => {
                 {/* Search, Details, and Form */}
                 <div className="col-lg-8">
                     {/* Search Section */}
-                    <div className="card border-0 shadow-sm bg-light rounded-4 overflow-hidden mb-4">
+                    <div className="card border-0 shadow-sm bg-light rounded-4 mb-4">
                         <div className="card-body p-4 text-center">
                             <div className="row justify-content-center">
                                 <div className="col-12">
