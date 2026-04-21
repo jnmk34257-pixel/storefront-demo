@@ -17,6 +17,28 @@ const Checkout = () => {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [ajaxResponse, setAjaxResponse] = useState(null);
 
+
+    const calculateTotal = () => {
+        return cart.reduce((total, item) => {
+            // Support both 'price' and 'fee' just in case some items use different naming conventions
+            let itemPrice = item.price || item.fee || "Free"; 
+            
+            if (typeof itemPrice === 'string') {
+                if (itemPrice.toLowerCase() === 'free') return total;
+                // Strip out the '$' and parse the number
+                const numericPrice = parseFloat(itemPrice.replace(/[^0-9.]/g, ''));
+                if (!isNaN(numericPrice)) {
+                    return total + numericPrice;
+                }
+            } else if (typeof itemPrice === 'number') {
+                return total + itemPrice;
+            }
+            return total;
+        }, 0);
+    };
+
+    const totalCost = calculateTotal();
+
     const validateField = (name, value) => {
         let errorMsg = '';
         if (!value.trim()) {
@@ -93,6 +115,7 @@ const Checkout = () => {
             participationType: participationType,
             specialRequests: specialRequests.trim(),
             scheduledEvents: cart,
+            totalCost: totalCost,
             submissionTime: new Date().toISOString()
         };
 
@@ -210,15 +233,31 @@ const Checkout = () => {
                             
                             <ul className="list-group list-group-flush bg-transparent">
                                 {cart.map(item => (
-                                    <li key={item.id} className="list-group-item bg-transparent px-0 border-bottom border-secondary-subtle">
-                                        <h6 className="my-0 text-dark fw-bold">{item.title}</h6>
-                                        <small className="text-muted">{item.time} | {item.id}</small>
+                                    <li key={item.id} className="list-group-item bg-transparent px-0 border-bottom border-secondary-subtle d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <h6 className="my-0 text-dark fw-bold">{item.title}</h6>
+                                            <small className="text-muted">{item.time} | {item.id}</small>
+                                        </div>
+                                        {/* Show individual event price */}
+                                        <span className="text-success fw-semibold">
+                                            {item.price === 'Free' || item.fee === 'Free' || !item.price ? 'Free' : (item.price || item.fee)}
+                                        </span>
                                     </li>
                                 ))}
                             </ul>
-                            <div className="mt-4 pt-3 border-top border-secondary-subtle d-flex justify-content-between">
-                                <strong>Total Sessions:</strong>
-                                <strong>{cart.length}</strong>
+                            
+                            {/* Updated Totals Section */}
+                            <div className="mt-4 pt-3 border-top border-secondary-subtle">
+                                <div className="d-flex justify-content-between mb-2 text-muted">
+                                    <strong>Total Sessions:</strong>
+                                    <strong>{cart.length}</strong>
+                                </div>
+                                <div className="d-flex justify-content-between fs-5 text-dark">
+                                    <strong>Total Cost:</strong>
+                                    <strong className="text-success">
+                                        ${totalCost.toFixed(2)}
+                                    </strong>
+                                </div>
                             </div>
                         </div>
                     </div>
