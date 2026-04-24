@@ -9,7 +9,7 @@ const initialFormState = {
 };
 
 const EventsPage = () => {
-    const { events, setEvents } = useContext(EventContext);
+    const { events, setEvents, removeFromCart } = useContext(EventContext);
     
     // Search State
     const [searchQuery, setSearchQuery] = useState('');
@@ -142,6 +142,8 @@ const EventsPage = () => {
     if (selectedEvent && selectedEvent.id === eventIdToDelete) {
         setSelectedEvent(null);
     }
+
+    removeFromCart(eventIdToDelete);
 };
 
     const getInputClass = (fieldName) => {
