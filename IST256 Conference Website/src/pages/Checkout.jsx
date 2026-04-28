@@ -20,7 +20,7 @@ const Checkout = () => {
 
     const calculateTotal = () => {
         return cart.reduce((total, item) => {
-            // Support both 'price' and 'fee' just in case some items use different naming conventions
+            // Support both 'price' and 'fee' 
             let itemPrice = item.price || item.fee || "Free"; 
             
             if (typeof itemPrice === 'string') {

@@ -70,9 +70,15 @@ const EventsPage = () => {
         }
 
         if (name === 'fee' && value) {
-            if (value.toLowerCase() !== 'free' && !/[\d$]/.test(value)) {
-                errorMsg = 'Please enter "Free" or a number with $ (e.g., $50)';
-            }
+            if(value.toLowerCase() !== 'free') { 
+                if (/-/.test(value)) {
+                errorMsg = 'Negative values are not allowed for fee.';
+                }
+                if (!/^(\$)?\d+(\.\d{2})?$/.test(value)) {
+                    errorMsg = 'Please enter "Free" or a number with $ (e.g., $50)';
+                }
+            } 
+            
         }
         return errorMsg;
     };
@@ -143,6 +149,7 @@ const EventsPage = () => {
         setSelectedEvent(null);
     }
 
+    // If the deleted event is in the cart, remove it from there as well via React Context
     removeFromCart(eventIdToDelete);
 };
 
