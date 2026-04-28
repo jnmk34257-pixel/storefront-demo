@@ -1,6 +1,7 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { EventContext } from '../context/EventContext';
 import { useNavigate, Link } from 'react-router-dom';
+import { getSavedUsers } from '../utils/storage';
 
 const Checkout = () => {
     const { cart, setCart } = useContext(EventContext);
@@ -16,6 +17,21 @@ const Checkout = () => {
     const [error, setError] = useState({ fullName: '', email: '' });
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [ajaxResponse, setAjaxResponse] = useState(null);
+
+    const [registeredUsers, setRegisteredUsers] = useState([]);
+    const [showSuggestions, setShowSuggestions] = useState(false);
+
+    // Load users from local storage on page load
+    useEffect(() => {
+        const savedUsers = getSavedUsers() || [];
+        setRegisteredUsers(savedUsers);
+    }, []);
+
+    // Filter users based on what is typed in the Full Name field
+    const filteredUsers = registeredUsers.filter(user => {
+        const full = `${user.firstName} ${user.lastName}`.toLowerCase();
+        return full.includes(fullName.toLowerCase());
+    });
 
 
     const calculateTotal = () => {
@@ -60,12 +76,25 @@ const Checkout = () => {
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
-        if (name === 'fullName') setFullName(value);
+        if (name === 'fullName') { 
+            setFullName(value);
+            setShowSuggestions(value.trim().length > 0);
+        }
         if (name === 'email') setEmail(value);
 
         const errorMsg = validateField(name, value);
         setError(prev => ({ ...prev, [name]: errorMsg }));
     }
+
+    // Auto-fill form when a suggestion is clicked
+    const handleSuggestionClick = (user) => {
+        setFullName(`${user.firstName} ${user.lastName}`);
+        setEmail(user.email);
+        setShowSuggestions(false);
+        
+        // Clear any validation errors since we know this data is good
+        setError(prev => ({ ...prev, fullName: '', email: '' }));
+    };
 
     const getInputClass = (fieldName, value) => {
         if (error[fieldName]) return "form-control is-invalid";
@@ -166,13 +195,33 @@ const Checkout = () => {
                                 </div>
                             ) : (
                                 <form onSubmit={handleCheckout} noValidate>
-                                    <div className="mb-3">
+                                    <div className="mb-3 position-relative">
                                         <label className="form-label">Full Name *</label>
                                         <input 
                                             type="text" className={getInputClass('fullName', fullName)}
                                             value={fullName} onChange={handleInputChange} name="fullName"
+                                            autoComplete="off"
+                                            onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
                                             required 
                                         />
+                                        
+                                        {/* AUTOCOMPLETE DROPDOWN */}
+                                        {showSuggestions && filteredUsers.length > 0 && (
+                                            <ul className="list-group position-absolute w-100 shadow-sm mt-1" style={{ zIndex: 1000 }}>
+                                                {filteredUsers.map((user, idx) => (
+                                                    <li 
+                                                        key={idx} 
+                                                        className="list-group-item list-group-item-action py-2"
+                                                        style={{ cursor: 'pointer' }}
+                                                        onMouseDown={() => handleSuggestionClick(user)}
+                                                    >
+                                                        <strong>{user.firstName} {user.lastName}</strong> <br/>
+                                                        <small className="text-muted">{user.email}</small>
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        )}
+
                                         {error.fullName && <div className="invalid-feedback">{error.fullName}</div>}
                                     </div>
 
